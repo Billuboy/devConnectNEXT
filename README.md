@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DevConnect website using NEXTJS
+_Redesign of DevConnect using NEXTJS and SWR reducing the overall latency of website by using Serverless Function, Sever Side Rendering and Static Site Generation with Incremental Static Regeneration provided by NEXTJS for creating fast and scalable web apps._
 
-## Getting Started
+## A word about NEXTJS
+_NEXTJS is a framework on top of React, enabling a simple React app the power of_
+<br/>
+<br/>
+_**Serverless Functions** - Serverless Functions are APIs with the power to automatically scale-up and scale-down depending upon the traffic._
+<br/>
+_**Static Site Generation** - Static Site Generation is the process of generating some web pages at the time of building a project._
+<br/>
+_**Server Side Rendering** - Server Side Rendering is the process of generating some web pages beforehand, giving a good SEO profile for the web pages._
 
-First, run the development server:
+## A word about SWR
+_SWR is a smart fetching, caching and state management tool, SWR reduces the number of re-renders, providing a good UX._
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## TechStack Used
+<img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" alt="node" width="40" height="40"/>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Platform Requriements
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+1. Latest version of Nodejs LTS
+2. Postman(Desktop App) or ThunderClient(VS Code Extension) - For testing Serverless Functions
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Quick start
 
-## Learn More
+1. Clone this repository
+2. `npm install` or `yarn install` in the project root folder on local.
+3. Put your MongoDB URI and JWT secret inside of `.env.development` for development and `.env.production` for testing production build.
+4. `npm run dev` or `yarn dev` to start application in development mode and `npm run prod` and `yarn prod` to start application in production mode.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## NPM Packages Used
+1. **Create Next App** - For creating NEXT app barebones  
+2. **SWR** - Data Fetching and State Management tool
+3. **Chakra UI** - CSS Component library for UI
+4. **Mongoose** - For adding data scehma on top of MongoDB
+5. **Next Connect** - For adding middleware support to serverless functions
+6. **PassportJS** - Nodejs Framework for implementing authentication 
+7. **Cookie** - For parsing and manipulating cookies
+8. **Json Web Token** - For signing and decrypting JWTs
+9. **Joi** - For data validation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Useful Links
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. **NEXTJS** - `https://nextjs.org`
+2. **SWR** - `https://swr.vercel.app`
