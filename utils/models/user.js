@@ -4,11 +4,14 @@ import jwt from 'jsonwebtoken';
 const { SECRET_KEY } = process.env;
 
 const Schema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
   },
-  email: {
+  avatar: {
+    type: String,
+  },
+  displayName: {
     type: String,
     required: true,
   },
@@ -48,5 +51,4 @@ Schema.methods.getRemToken = function () {
 };
 
 const User = mongoose.models.users || mongoose.model('users', Schema);
-
-module.exports = User;
+export default User;

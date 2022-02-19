@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'users',
   },
   handle: {
@@ -19,58 +19,6 @@ const Schema = new mongoose.Schema({
   skills: [String],
   bio: String,
   githubusername: String,
-  experience: [
-    {
-      title: {
-        type: String,
-        required: true,
-      },
-      company: {
-        type: String,
-        required: true,
-      },
-      location: {
-        type: String,
-        required: true,
-      },
-      from: {
-        type: Date,
-        required: true,
-      },
-      to: Date,
-      current: {
-        type: Boolean,
-        default: false,
-      },
-      description: String,
-    },
-  ],
-  education: [
-    {
-      school: {
-        type: String,
-        required: true,
-      },
-      degree: {
-        type: String,
-        required: true,
-      },
-      fieldofstudy: {
-        type: String,
-        required: true,
-      },
-      from: {
-        type: Date,
-        required: true,
-      },
-      to: Date,
-      current: {
-        type: Boolean,
-        default: false,
-      },
-      description: String,
-    },
-  ],
   social: {
     facebook: String,
     instagram: String,
@@ -81,5 +29,4 @@ const Schema = new mongoose.Schema({
 });
 
 const Profile = mongoose.models.profiles || mongoose.model('profiles', Schema);
-
-module.exports = Profile;
+export default Profile;

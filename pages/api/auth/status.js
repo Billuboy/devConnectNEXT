@@ -6,8 +6,8 @@ export default connect().get((req, res) => {
   if (req.headers?.cookie) {
     const cookies = cookie.parse(req.headers.cookie);
 
-    if (cookies?.auth) {
-      const auth = cookies['auth'];
+    if (cookies?.session_token) {
+      const auth = cookies['session_token'];
       const payload = decode(auth);
 
       return res.json({ payload });

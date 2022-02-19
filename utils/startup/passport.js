@@ -7,7 +7,7 @@ function cookieExtractor(req) {
 
   if (req.headers?.cookie) {
     const cookies = cookie.parse(req.headers?.cookie);
-    if (cookies?.auth) jwt = cookies.auth;
+    if (cookies?.session_token) jwt = cookies.session_token;
   }
 
   return jwt;

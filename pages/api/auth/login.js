@@ -12,7 +12,7 @@ export default connect()
     if (!user)
       return res
         .status(404)
-        .json({ email: "User with given email doesn't exist" });
+        .json({ auth: 'Invalid Username/Password Combination' });
 
     const passwordValid = await bcrypt.compare(
       req.body.password,
@@ -20,7 +20,9 @@ export default connect()
     );
 
     if (!passwordValid)
-      return res.status(400).json({ password: 'Incorrect Combination' });
+      return res
+        .status(400)
+        .json({ auth: 'Invalid Username/Password Combination' });
 
     var token;
     if (req.body.remMe) {
@@ -28,10 +30,11 @@ export default connect()
 
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize('auth', token, {
+        cookie.serialize('session_token', token, {
           httpOnly: true,
           secure: process.env.NODE_ENV !== 'development',
           sameSite: 'strict',
+          maxAge: 3600 * 24 * 5,
           path: '/',
         })
       );
@@ -40,11 +43,11 @@ export default connect()
 
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize('auth', token, {
+        cookie.serialize('session_token', token, {
           httpOnly: true,
           secure: process.env.NODE_ENV !== 'development',
           sameSite: 'strict',
-          maxAge: 3600,
+          maxAge: 3600 * 24,
           path: '/',
         })
       );

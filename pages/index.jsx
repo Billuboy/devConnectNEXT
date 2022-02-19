@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   Box,
   Flex,
@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import useSwr, { mutate } from 'swr';
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 
 import PostCard from '../components/post/postCard';
 import PostCreate from '../components/post/createPost';
@@ -27,27 +27,12 @@ function Index(props) {
   const { data } = useSwr('/api/post', {
     initialData: props.data,
   });
-
+  //auth
   const { userInfo, auth } = useAuth();
 
-  const deletePost = async postId => {
-    if (
-      window.confirm(
-        'This will delete your account permanently. This cannot be undone!!! '
-      )
-    ) {
-      const res = data.filter(({ _id }) => _id !== postId);
-
-      mutate('/api/post', res, false);
-      await axios.delete(`/api/post/${postId}`);
-      mutate('/api/post');
-    }
-  };
-
-  const createPost = async post => {
+  const createPost = async (post) => {
     try {
       data.push(post);
-
       mutate('/api/post', data, false);
       await axios.post('/api/post', { text: post.text });
       mutate('/api/post');
@@ -56,6 +41,20 @@ function Index(props) {
       setErrors(err.response.data);
     }
   };
+
+  // const deletePost = async (postId) => {
+  //   if (
+  //     window.confirm(
+  //       'This will delete your account permanently. This cannot be undone!!! '
+  //     )
+  //   ) {
+  //     const res = data.filter(({ _id }) => _id !== postId);
+
+  //     mutate('/api/post', res, false);
+  //     await axios.delete(`/api/post/${postId}`);
+  //     mutate('/api/post');
+  //   }
+  // };
 
   const loginPopup = () => {
     const toast = createStandaloneToast();
@@ -74,66 +73,68 @@ function Index(props) {
     });
   };
 
-  const onLike = async postId => {
+  const onLike = async (postId) => {
     if (auth) {
-      const index = data.findIndex(d => d._id === postId);
+      // const index = data.findIndex((d) => d._id === postId);
 
-      if (
-        data[index].likes.filter(({ user }) => user === userInfo?._id).length >
-        0
-      ) {
-        likeColor.current = '#61B15A';
-        _.remove(data[index].likes, ({ user }) => user === userInfo?._id);
-        --data[index].likeCount;
-      } else {
-        likeColor.current = '#000';
-        data[index].likes.push({ user: userInfo?._id });
-        ++data[index].likeCount;
-      }
+      // if (
+      //   data[index].likes.filter(({ user }) => user === userInfo?._id).length >
+      //   0
+      // ) {
+      //   likeColor.current = '#61B15A';
+      //   _.remove(data[index].likes, ({ user }) => user === userInfo?._id);
+      //   --data[index].likeCount;
+      // } else {
+      //   likeColor.current = '#000';
+      //   data[index].likes.push({ user: userInfo?._id });
+      //   ++data[index].likeCount;
+      // }
 
-      mutate(`/api/post`, data, false);
-      await axios.post(`/api/post/like/${postId}`);
-      mutate(`/api/post`);
+      // mutate(`/api/post`, data, false);
+      // await axios.post(`/api/post/like/${postId}`);
+      // mutate(`/api/post`);
+      console.log('post-id', postId);
     } else {
       loginPopup();
     }
   };
 
-  const renderPost = () => {
-    return data.map(post => {
+  const RenderPost = () =>
+    data.map((post) => {
+      // const memoizedPost = useMemo(() => post, [post.likeCount]);
       return (
         <PostCard
+          // key={memoizedPost._id}
+          // post={memoizedPost}
           key={post._id}
           post={post}
-          bg="#cfefe7"
-          bgText="#f0faf7"
-          comment={true}
-          deletePost={deletePost}
-          onLike={onLike}
-          likeColor={likeColor}
-          userInfo={userInfo}
+          // bg="#cfefe7"
+          // bgText="#f0faf7"
+          // comment={true}
+          // // deletePost={deletePost}
+          // onLike={onLike}
+          // likeColor={likeColor}
+          // userInfo={userInfo}
         />
       );
     });
-  };
 
-  const renderPostButton = () => {
-    return (
-      <Button
-        p="0"
-        h="50px"
-        w="50px"
-        borderRadius="50%"
-        mb="2rem"
-        mr="2rem"
-        bg="#16c79a"
-        _focus={{ outline: 'none' }}
-        _hover={{ background: '#13b38a' }}
-        onClick={onToggle}>
-        <i className="fas fa-plus"></i>
-      </Button>
-    );
-  };
+  const renderPostButton = () => (
+    <Button
+      p="0"
+      h="50px"
+      w="50px"
+      borderRadius="50%"
+      mb="2rem"
+      mr="2rem"
+      bg="#16c79a"
+      _focus={{ outline: 'none' }}
+      _hover={{ background: '#13b38a' }}
+      onClick={onToggle}
+    >
+      <i className="fas fa-plus"></i>
+    </Button>
+  );
 
   const renderPostInput = () => {
     if (isOpen) {
@@ -144,7 +145,8 @@ function Index(props) {
           m="1rem"
           bg="#bce9dd"
           borderRadius="10px"
-          boxShadow="lg">
+          boxShadow="lg"
+        >
           <PostCreate
             create={createPost}
             error={errors}
@@ -174,7 +176,8 @@ function Index(props) {
             align="center"
             h="100%"
             direction="column"
-            color="#fff">
+            color="#fff"
+          >
             <Heading fontWeight="500" fontSize="3rem" mb="1.5rem">
               No Posts Yet
             </Heading>
@@ -204,7 +207,7 @@ function Index(props) {
 
       <Box minH="calc(100vh - 130px)">
         <Flex align="center" direction="column">
-          <Box w="45%">{renderPost()}</Box>
+          <Box w="45%">{RenderPost()}</Box>
           <Box w="100%" position="fixed" bottom="0" textAlign="right">
             {renderPostButton()}
           </Box>

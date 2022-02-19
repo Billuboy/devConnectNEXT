@@ -6,6 +6,7 @@
   },
   "env": {
     "browser": true,
+    "node": true,
     "es2021": true
   },
   "extends": [
@@ -23,5 +24,9 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
-  "rules": {}
+  "rules": {
+    "react/prop-types": "off",
+    "arrow-body-style": "warn",
+    "no-unused-vars": "warn"
+  }
 }
