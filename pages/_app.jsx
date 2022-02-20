@@ -16,27 +16,25 @@ import RedirGuard from '../components/redirGuard';
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
-      <div id="app">
-        <Header />
-        <SWRConfig
-          value={{
-            fetcher: (url) => axios(url).then((res) => res.data),
-          }}
-        >
-          {Component.requireAuth ? (
-            <AuthGuard>
-              <Component {...pageProps} />
-            </AuthGuard>
-          ) : Component.redir ? (
-            <RedirGuard>
-              <Component {...pageProps} />
-            </RedirGuard>
-          ) : (
+      <Header />
+      <SWRConfig
+        value={{
+          fetcher: (url) => axios(url).then((res) => res.data),
+        }}
+      >
+        {Component.requireAuth ? (
+          <AuthGuard>
             <Component {...pageProps} />
-          )}
-        </SWRConfig>
-        <Footer />
-      </div>
+          </AuthGuard>
+        ) : Component.redir ? (
+          <RedirGuard>
+            <Component {...pageProps} />
+          </RedirGuard>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </SWRConfig>
+      <Footer />
     </SessionProvider>
   );
 }

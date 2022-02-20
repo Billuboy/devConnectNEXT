@@ -20,7 +20,10 @@ export default function Header() {
         color="#11698e"
         _hover={{ background: '#abe8e8', color: '#11698e' }}
         _focus={{ outline: 'none' }}
-        onCLick={() => signOut()}
+        onClick={async (e) => {
+          e.preventDefault();
+          signOut();
+        }}
       >
         Register
       </Button>
@@ -33,10 +36,12 @@ export default function Header() {
         color="#11698e"
         _hover={{ background: '#abe8e8', color: '#11698e' }}
         _focus={{ outline: 'none' }}
-        onClick={() =>
-          signIn('credentials', { callbackUrl: 'http://localhost:3000/' })
-        }
+        onClick={async (e) => {
+          e.preventDefault();
+          signIn();
+        }}
       >
+        {/* , { callbackUrl: 'http://localhost:3000/' } */}
         Login
       </Button>
       {/* </RouterLink> */}
