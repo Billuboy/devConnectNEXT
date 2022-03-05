@@ -236,11 +236,19 @@
 // export default Index;
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+// import { useSession, signOut } from 'next-auth/react';
 
 export default function Index() {
-  const { data: session, status } = useSession();
-  console.log('status', status);
-  console.log('session', session?.user);
-  return <div>Index</div>;
+  // const { data: session, status } = useSession();
+  // console.log('status', status);
+  // console.log('session', session?.user);
+  return (
+    <div>
+      <div>Index</div>
+      <div>
+        <Link href="/post/create">Create</Link>
+      </div>
+    </div>
+  );
 }

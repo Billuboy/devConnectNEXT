@@ -1,16 +1,13 @@
 import mongoose from 'mongoose';
 
 const Schema = new mongoose.Schema({
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
   },
   text: {
     type: String,
     required: true,
-  },
-  name: {
-    type: String,
   },
   date: {
     type: Date,

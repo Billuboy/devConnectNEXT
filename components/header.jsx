@@ -1,128 +1,41 @@
 import React from 'react';
-import RouterLink from 'next/link';
-import Router from 'next/router';
-import { Box, Flex, Text, Button } from '@chakra-ui/react';
-import axios from 'axios';
-import { signIn, signOut } from 'next-auth/react';
-
-import { useAuth } from './authContext';
+import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function Header() {
-  const { auth, changeState } = useAuth();
+  const { status } = useSession();
 
-  const authLinks = () => (
+  const UnAuthOptions = () => <Link href="/auth">Coninue to DevChat</Link>;
+
+  const AuthOptions = () => (
     <>
-      {/* <RouterLink href="/register"> */}
-      <Button
-        ml="0.5rem"
-        fontWeight="700"
-        bg="#b5eaea"
-        color="#11698e"
-        _hover={{ background: '#abe8e8', color: '#11698e' }}
-        _focus={{ outline: 'none' }}
+      <button
         onClick={async (e) => {
           e.preventDefault();
-          signOut();
+          await signOut();
         }}
-      >
-        Register
-      </Button>
-      {/* </RouterLink> */}
-      {/* <RouterLink href="/login"> */}
-      <Button
-        ml="0.5rem"
-        fontWeight="700"
-        bg="#b5eaea"
-        color="#11698e"
-        _hover={{ background: '#abe8e8', color: '#11698e' }}
-        _focus={{ outline: 'none' }}
-        onClick={async (e) => {
-          e.preventDefault();
-          signIn();
-        }}
-      >
-        {/* , { callbackUrl: 'http://localhost:3000/' } */}
-        Login
-      </Button>
-      {/* </RouterLink> */}
-    </>
-  );
-
-  // const logout = async () => {
-  //   await axios.post('/api/auth/logout');
-  //   changeState(false, false, {});
-  //   Router.replace('/');
-  // };
-
-  const userLinks = () => (
-    <>
-      <RouterLink href="/dashboard">
-        <Button
-          ml="0.5rem"
-          fontWeight="700"
-          bg="#b5eaea"
-          color="#11698e"
-          _hover={{ background: '#abe8e8', color: '#11698e' }}
-          _focus={{ outline: 'none' }}
-        >
-          Dashboard
-        </Button>
-      </RouterLink>
-      <Button
-        ml="0.5rem"
-        fontWeight="700"
-        bg="#b5eaea"
-        color="#11698e"
-        _hover={{ background: '#abe8e8', color: '#11698e' }}
-        _focus={{ outline: 'none' }}
-        // onClick={logout}
       >
         Logout
-      </Button>
+      </button>
     </>
   );
 
   const renderHeader = () => (
-    <Flex justifyContent="space-between">
-      <Box>
-        <RouterLink href="/">
-          <Box
-            fontSize="1.5rem"
-            cursor="pointer"
-            fontWeight="800"
-            color="#4087a4"
-            display="inline"
-          >
-            <Text display="inline" color="#76c2c0">
-              Dev
-            </Text>
-            Connect
-          </Box>
-        </RouterLink>
-      </Box>
-      <Box className="router" color="#eee">
-        <RouterLink href="/devs">
-          <Button
-            ml="0.5rem"
-            fontWeight="700"
-            bg="#b5eaea"
-            color="#11698e"
-            _hover={{ background: '#abe8e8', color: '#11698e' }}
-            _focus={{ outline: 'none' }}
-          >
-            Devs
-          </Button>
-        </RouterLink>
-        {auth ? userLinks() : authLinks()}
-      </Box>
-    </Flex>
+    <div>
+      <Link href="/">
+        <div>
+          Dev<span>Chat</span>
+        </div>
+      </Link>
+      {status === 'loading' ? (
+        'Loading...'
+      ) : status === 'authenticated' ? (
+        <AuthOptions />
+      ) : (
+        <UnAuthOptions />
+      )}
+    </div>
   );
 
-  return (
-    <Flex alignItems="center">
-      <Box w="100%" p="1rem">
-        {renderHeader()}
-      </Box>
-    </Flex>
-  );
+  return renderHeader();
 }

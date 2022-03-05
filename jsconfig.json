@@ -7,6 +7,6 @@
       "@lib/*": ["lib/*"]
     }
   },
-  "include": ["components", "pages", "utils"],
+  "include": ["components", "pages", "utils", "lib"],
   "exclude": ["node_modules", ".next"]
 }

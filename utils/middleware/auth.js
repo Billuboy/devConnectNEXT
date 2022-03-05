@@ -1,16 +1,11 @@
 import connect from 'next-connect';
 
-import passport from '../startup/passport';
-import dbConnect from '../startup/db';
+import { getSession } from 'next-auth/react';
 
-export default connect()
-  .use(async (req, res, next) => {
-    try {
-      await dbConnect();
-      console.log('connected to db');
-      next();
-    } catch (err) {
-      throw new Error('Error connecting to MongoDB');
-    }
-  })
-  .use(passport.initialize());
+export default connect().use(async (req, res, next) => {
+  const session = await getSession({ req });
+
+  if (!session) return res.status(403).send('Unauthenticated');
+  req.user = { name: session.user.name, id: session.user.uid };
+  next();
+});

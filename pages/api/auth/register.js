@@ -1,28 +1,34 @@
-import bcrypt from 'bcryptjs';
-import _ from 'lodash';
-import connect from 'next-connect';
+import { hashPassword } from '@lib/bcrypt';
 
-import User from '../../../utils/models/user';
-import auth from '../../../utils/middleware/auth';
-import Validate from '../../../utils/validations/auth/auth';
+import dbConnect from '@utils/startup/db';
+import User from '@utils/models/user';
+import validate from '@utils/validations/auth';
 
-export default connect()
-  .use(auth)
-  .post(async (req, res) => {
-    const result = Validate(req.body, res);
-    if (result === undefined) return;
+export default async (req, res) => {
+  await dbConnect();
 
-    let user = await User.findOne({ email: req.body.email });
+  const register = async () => {
+    const result = await validate(req.body);
+    if (!result.valid) return res.status(400).json(result.errors);
+
+    let user = await User.findOne({ username: req.body.username });
     if (user)
       return res
         .status(400)
-        .json({ email: 'User with current email is already registered' });
+        .json({ username: 'Username is already registered' });
 
-    user = new User(_.pick(req.body, ['name', 'email', 'password']));
+    const password = await hashPassword(req.body.password);
+    user = new User({ username: req.body.username, password, new: false });
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    await user.save();
+    return res.status(201).json('created');
+  };
 
-    const response = await user.save();
-    return res.json(_.pick(response, ['_id', 'name', 'email']));
-  });
+  switch (req.method) {
+    case 'POST':
+      await register();
+      break;
+    default:
+      return res.status(405).send('Invalid request method');
+  }
+};

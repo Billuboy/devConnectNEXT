@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
   },
   likes: [
     {
-      user: {
+      author: {
         type: mongoose.Types.ObjectId,
       },
     },

@@ -5,6 +5,10 @@ const schema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'posts',
   },
+  count: {
+    type: Number,
+    default: 0,
+  },
   comments: [
     {
       user: {
