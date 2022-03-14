@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { signIn } from 'next-auth/react';
 
 import { jsonStringify, jsonParse } from '@lib/parseJSON';
+import TextField from '@components/containers/textField';
 
 export default function Register({ setAuthType }) {
   const onSubmit = async (data, { setErrors }) => {
@@ -57,6 +58,16 @@ export default function Register({ setAuthType }) {
     </button>
   );
 
+  const onChange = useCallback(
+    (value, field) => formik.setFieldValue(field, value),
+    []
+  );
+
+  const onBlur = useCallback(
+    (field) => formik.setFieldTouched(`${field}`, true),
+    []
+  );
+
   const renderForm = () => (
     <form
       onSubmit={formik.handleSubmit}
@@ -64,26 +75,28 @@ export default function Register({ setAuthType }) {
     >
       <h4>Register</h4>
       <label htmlFor="username">Username</label>
-      <input
+      <TextField
         id="username"
         type="text"
-        autoComplete="off"
         placeholder="Username"
         disabled={formik.isSubmitting}
-        {...formik.getFieldProps('username')}
+        value={formik.values.username}
+        onChange={onChange}
+        onBlur={onBlur}
       />
       {formik.touched.username && formik.errors.username ? (
         <div>{formik.errors.username}</div>
       ) : null}
 
       <label htmlFor="password">Password</label>
-      <input
+      <TextField
         id="password"
         type="password"
-        autoComplete="off"
         placeholder="Password"
         disabled={formik.isSubmitting}
-        {...formik.getFieldProps('password')}
+        value={formik.values.password}
+        onChange={onChange}
+        onBlur={onBlur}
       />
       {formik.touched.password && formik.errors.password ? (
         <div>{formik.errors.password}</div>

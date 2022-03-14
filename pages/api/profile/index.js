@@ -4,7 +4,7 @@ import User from '../../../utils/models/user';
 import Profile from '../../../utils/models/profile';
 import lodash from 'lodash';
 import passport from '../../../utils/startup/passport';
-import Validate from '../../../utils/validations/profile/profile';
+import Validate from '../../../utils/validations/profile';
 import auth from '../../../utils/middleware/auth';
 
 export default connect()
@@ -41,8 +41,8 @@ export default connect()
 
     if (typeof req.body.skills !== 'undefined') {
       const skills = req.body.skills.split(',');
-      const skillsTrim = skills.map(skill => skill.trim());
-      const skillsRefined = lodash.remove(skillsTrim, skill => {
+      const skillsTrim = skills.map((skill) => skill.trim());
+      const skillsRefined = lodash.remove(skillsTrim, (skill) => {
         if (skill !== '') return skill;
       });
 

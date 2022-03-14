@@ -1,15 +1,9 @@
 import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema({
-  post: {
-    type: mongoose.Types.ObjectId,
-    ref: 'posts',
-  },
   likes: [
     {
-      author: {
-        type: mongoose.Types.ObjectId,
-      },
+      type: mongoose.Types.ObjectId,
     },
   ],
 });

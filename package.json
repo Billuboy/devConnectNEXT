@@ -10,10 +10,8 @@
     "export": "next export"
   },
   "dependencies": {
-    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "formik": "^2.2.9",
-    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.13.3",
     "next": "^11.1.4",

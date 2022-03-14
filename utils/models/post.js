@@ -5,6 +5,10 @@ const Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
   },
+  like: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'likes',
+  },
   text: {
     type: String,
     required: true,

@@ -1,7 +1,7 @@
 import connect from 'next-connect';
 import _ from 'lodash';
 
-import Validate from '../../../../utils/validations/profile/experience';
+import Validate from '../../../../utils/validations/experience';
 import Profile from '../../../../utils/models/profile';
 import passport from '../../../../utils/startup/passport';
 import auth from '../../../../utils/middleware/auth';
