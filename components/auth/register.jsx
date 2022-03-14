@@ -3,31 +3,20 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { signIn } from 'next-auth/react';
 
-import { jsonStringify, jsonParse } from '@lib/parseJSON';
+import { jsonParse } from '@lib/parseJSON';
+import { httpPost } from '@lib/http';
 import TextField from '@components/containers/textField';
 
 export default function Register({ setAuthType }) {
   const onSubmit = async (data, { setErrors }) => {
     try {
-      const request = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: jsonStringify(data),
-      });
-
-      if (!request.ok) {
-        const response = await request.json();
-        throw new Error(jsonStringify(response));
-      }
-
+      await httpPost('/api/auth/register', data);
       await signIn('credentials', {
         ...data,
         callbackUrl: '/',
       });
     } catch (err) {
+      console.log(err.message);
       setErrors(jsonParse(err.message));
     }
   };

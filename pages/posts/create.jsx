@@ -1,40 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
-import { jsonStringify } from '@lib/parseJSON';
+import { httpPost } from '@lib/http';
 
 export default function PostCreate() {
-  const [resetFunction, setResetFunction] = useState(null);
   const controller = useRef(null);
+  let timeout;
 
-  useEffect(() => {
-    let timeout;
-    if (resetFunction) timeout = setTimeout(() => resetFunction(), 500);
-
-    return () => {
+  useEffect(
+    () => () => {
       controller.current?.abort();
       clearTimeout(timeout);
-    };
-  }, [resetFunction]);
+    },
+    []
+  );
 
   const onSubmit = async (data, { resetForm }) => {
     try {
       controller.current = new AbortController();
-      await fetch('/api/posts/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: jsonStringify(data),
-        signal: controller.current.signal,
-      });
+      await httpPost('/api/posts/', data, controller.current.signal);
+      timeout = setTimeout(() => resetForm(), 500);
     } catch (err) {
       console.log('ERROR: http request has been cancelled by user');
     }
-
-    setResetFunction(resetForm);
   };
 
   const formik = useFormik({
