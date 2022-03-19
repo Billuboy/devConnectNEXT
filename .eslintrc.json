@@ -9,8 +9,7 @@
     "node": true,
     "es2021": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
-  "parser": "",
+  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -21,7 +20,10 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "react/prop-types": "off",
-    "arrow-body-style": "warn",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "import/no-unresolved": "off",
+    "no-underscore-dangle": "off"
   }
 }

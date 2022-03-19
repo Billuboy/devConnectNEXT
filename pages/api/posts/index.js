@@ -1,16 +1,18 @@
 import connect from 'next-connect';
+import { Types } from 'mongoose';
 
 import { Post, Like, Comment } from '@utils/models';
 import { validatePost } from '@utils/validations';
-import { all, auth } from '@utils/middleware';
+import { all, auth, postAuth } from '@utils/middleware';
 
 const handler = connect();
 handler.use(all);
 
-handler.get(async (req, res) => {
+handler.use(postAuth).get(async (req, res) => {
+  const userId = req.user ? new Types.ObjectId(req.user.id) : null;
   const posts = await Post.aggregate([
     { $limit: 10 },
-    { $project: { text: 1, author: 1, date: 1 } },
+    { $project: { title: 1, desc: 1, author: 1, date: 1 } },
     {
       $lookup: {
         from: 'users',
@@ -21,70 +23,47 @@ handler.get(async (req, res) => {
       },
     },
     {
-      $addFields: {
-        author: {
-          $arrayElemAt: ['$author', 0],
-        },
-      },
-    },
-    {
       $lookup: {
         from: 'comments',
         localField: '_id',
         foreignField: 'post',
-        as: 'comment',
-        pipeline: [{ $project: { count: 1, _id: 0 } }],
+        as: 'comments',
+        pipeline: [{ $project: { _id: 0, count: 1 } }],
       },
     },
     {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: [
-            {
-              $arrayElemAt: ['$comment', 0],
+      $lookup: {
+        from: 'likes',
+        localField: '_id',
+        foreignField: 'post',
+        as: 'likes',
+        pipeline: [
+          {
+            $project: {
+              _id: 0,
+              count: 1,
+              isLiked: {
+                $in: [userId, '$likes'],
+              },
             },
-            '$$ROOT',
-          ],
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        author: {
+          $arrayElemAt: ['$author', 0],
+        },
+        comments: {
+          $arrayElemAt: ['$comments', 0],
+        },
+        likes: {
+          $arrayElemAt: ['$likes', 0],
         },
       },
     },
-    { $project: { comment: 0 } },
   ]);
-
-  // const likes = await Like.aggregate([
-  //   // {
-  //   //   $addFields: {
-  //   //     details: {
-  //   //       $arrayToObject: {
-  //   //         $map: {
-  //   //           input: '$details',
-  //   //           as: 'out',
-  //   //           in: {
-  //   //             k: '$$out.Name',
-  //   //             v: '$$out',
-  //   //           },
-  //   //         },
-  //   //       },
-  //   //     },
-  //   //   },
-  //   // },
-  //   // { $project: { post: 1, likes: 1 } },
-  //   // {
-  //   //   $arrayToObject: {
-  //   //     $map: {
-  //   //       $input: '$ROOT',
-  //   //       as: 'likes',
-  //   //       in: {
-  //   //         k: '$$likes.post',
-  //   //         v: '$$likes.likes',
-  //   //       },
-  //   //     },
-  //   //   },
-  //   // },
-  // ]);
-
-  // if (!posts.length) return res.json({ posts: [] });
-
   return res.json(posts);
 });
 
@@ -92,17 +71,16 @@ handler.use(auth).post(async (req, res) => {
   const result = await validatePost(req.body);
   if (!result.valid) return res.status(400).json(result.errors);
 
-  const newLike = new Like();
-  const insertedLike = await newLike.save();
-
   const post = {
-    text: req.body.text,
-    like: insertedLike._id,
+    title: req.body.title,
+    desc: req.body.desc,
     author: req.user.id,
   };
 
   const newPost = new Post(post);
   const insertedPost = await newPost.save();
+  const newLike = new Like({ post: insertedPost._id });
+  await newLike.save();
   const newComment = new Comment({ post: insertedPost._id });
   await newComment.save();
   return res.status(201).send('created');

@@ -5,11 +5,11 @@ const Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
   },
-  like: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'likes',
+  title: {
+    type: String,
+    required: true,
   },
-  text: {
+  desc: {
     type: String,
     required: true,
   },

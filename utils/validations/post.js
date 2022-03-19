@@ -1,9 +1,13 @@
 import * as Yup from 'yup';
 
 const schema = Yup.object().shape({
-  text: Yup.string()
-    .required('Post body is required')
-    .typeError('Post body must be string'),
+  title: Yup.string()
+    .min(3, 'Must be atleast 3 charaters long')
+    .required('Title is required')
+    .typeError('Title must be string'),
+  desc: Yup.string()
+    .min(10, 'Must be atleast 10 characters long')
+    .required('Description is required'),
 });
 
 export default async (body) => {

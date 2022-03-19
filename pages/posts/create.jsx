@@ -28,12 +28,17 @@ export default function PostCreate() {
 
   const formik = useFormik({
     initialValues: {
-      text: '',
+      title: '',
+      desc: '',
     },
     validationSchema: Yup.object().shape({
-      text: Yup.string()
-        .required('Post body is required')
-        .typeError('Post body must be string'),
+      title: Yup.string()
+        .min(3, 'Must be atleast 3 charaters long')
+        .required('Title is required')
+        .typeError('Title must be string'),
+      desc: Yup.string()
+        .min(10, 'Must be atleast 10 characters long')
+        .required('Description is required'),
     }),
     onSubmit,
   });
@@ -43,17 +48,34 @@ export default function PostCreate() {
       onSubmit={formik.handleSubmit}
       className="form border-2 border-gray-100 border-solid p-8 rounded-2xl shadow-xl"
     >
-      <label htmlFor="postCreateArea">Create a post</label>
-      <textarea
-        name="postCreateArea"
-        id="postCreateArea"
-        cols="30"
-        rows="10"
-        disabled={formik.isSubmitting}
-        {...formik.getFieldProps('text')}
-      />
-      {formik.touched.text && formik.errors.text ? (
-        <div>{formik.errors.text}</div>
+      <label htmlFor="title">
+        <p>Title</p>
+        <input
+          name="title"
+          id="title"
+          cols="30"
+          rows="10"
+          disabled={formik.isSubmitting}
+          {...formik.getFieldProps('title')}
+        />
+      </label>
+      {formik.touched.title && formik.errors.title ? (
+        <div>{formik.errors.title}</div>
+      ) : null}
+
+      <label htmlFor="desc">
+        <p>Description</p>
+        <textarea
+          name="desc"
+          id="desc"
+          cols="30"
+          rows="10"
+          disabled={formik.isSubmitting}
+          {...formik.getFieldProps('desc')}
+        />
+      </label>
+      {formik.touched.desc && formik.errors.desc ? (
+        <div>{formik.errors.desc}</div>
       ) : null}
 
       <button type="submit" disabled={formik.isSubmitting}>
