@@ -4,9 +4,10 @@
     "paths": {
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
-  "include": ["components", "pages", "utils", "lib"],
+  "include": ["components", "pages", "utils", "lib", "hooks/useInfinite.js"],
   "exclude": ["node_modules", ".next"]
 }

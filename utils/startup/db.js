@@ -9,22 +9,22 @@ if (!MONGODB_URI && !SECRET_KEY)
 
 let cached = global.mongoose;
 
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
+if (!cached) {
+  global.mongoose = { conn: null, promise: null };
+  cached = global.mongoose;
+}
 
 async function db() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
     const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
+      bufferCommands: false,
     };
 
     cached.promise = mongoose
       .connect(MONGODB_URI, opts)
-      .then((mongoose) => mongoose);
+      .then((mongoosePromise) => mongoosePromise);
   }
 
   cached.conn = await cached.promise;
@@ -34,9 +34,9 @@ async function db() {
 export async function dbConnect(req, res, next) {
   try {
     await db();
-    next();
+    return next();
   } catch (err) {
-    return res.status(500).send('Internal Server Error');
+    return res.status(500).send('Error connecting with database');
   }
 }
 

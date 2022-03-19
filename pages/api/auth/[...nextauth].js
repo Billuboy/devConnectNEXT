@@ -5,7 +5,6 @@ import GoogleProvider from 'next-auth/providers/google';
 import { handleGoogleLogin, handleCredentialsLogin } from '@lib/authHelper';
 
 export default (req, res) => {
-  // console.log('error', req.body);
   const options = {
     session: {
       jwt: true,
@@ -49,16 +48,11 @@ export default (req, res) => {
     ],
     callbacks: {
       async session({ session, token }) {
-        session.user.uid = token.sub;
-        return Promise.resolve(session);
+        return Promise.resolve({
+          ...session,
+          user: { ...session.user, uid: token.sub },
+        });
       },
-      // redirect({ url, baseUrl }) {
-      //   console.log('base', baseUrl);
-      //   console.log('url', url);
-      //   // if (url.startsWith(baseUrl)) return url;
-      //   // else if (url.startsWith('/')) return new URL(url, baseUrl).toString();
-      //   return `${baseUrl}/books`;
-      // },
     },
   };
 
