@@ -3,13 +3,13 @@ import _ from 'lodash';
 import connect from 'next-connect';
 
 import User from '../../../utils/models/user';
-import { auth, db } from '../../../utils/middleware';
+import { db } from '../../../utils/middleware';
 import Validate from '../../../utils/validations/auth/auth';
 
 const handler = connect();
 handler.use(db);
 
-handler.use(auth).post(async (req, res) => {
+handler.post(async (req, res) => {
   const result = Validate(req.body, res);
   if (result === undefined) return;
 

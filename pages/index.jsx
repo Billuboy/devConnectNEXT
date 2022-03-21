@@ -33,7 +33,7 @@ function Index(props) {
   const deletePost = async postId => {
     if (
       window.confirm(
-        'This will delete your account permanently. This cannot be undone!!! '
+        'This will delete your account permanently. This cannot be undone!!! ',
       )
     ) {
       const res = data.filter(({ _id }) => _id !== postId);
@@ -105,8 +105,8 @@ function Index(props) {
         <PostCard
           key={post._id}
           post={post}
-          bg="#cfefe7"
-          bgText="#f0faf7"
+          bg='#cfefe7'
+          bgText='#f0faf7'
           comment={true}
           deletePost={deletePost}
           onLike={onLike}
@@ -120,17 +120,17 @@ function Index(props) {
   const renderPostButton = () => {
     return (
       <Button
-        p="0"
-        h="50px"
-        w="50px"
-        borderRadius="50%"
-        mb="2rem"
-        mr="2rem"
-        bg="#16c79a"
+        p='0'
+        h='50px'
+        w='50px'
+        borderRadius='50%'
+        mb='2rem'
+        mr='2rem'
+        bg='#16c79a'
         _focus={{ outline: 'none' }}
         _hover={{ background: '#13b38a' }}
         onClick={onToggle}>
-        <i className="fas fa-plus"></i>
+        <i className='fas fa-plus'></i>
       </Button>
     );
   };
@@ -139,17 +139,17 @@ function Index(props) {
     if (isOpen) {
       return (
         <Box
-          w="90%"
-          p="1rem"
-          m="1rem"
-          bg="#bce9dd"
-          borderRadius="10px"
-          boxShadow="lg">
+          w='90%'
+          p='1rem'
+          m='1rem'
+          bg='#bce9dd'
+          borderRadius='10px'
+          boxShadow='lg'>
           <PostCreate
             create={createPost}
             error={errors}
-            placeholder="Message"
-            label="Post Input"
+            placeholder='Message'
+            label='Post Input'
           />
         </Box>
       );
@@ -163,30 +163,30 @@ function Index(props) {
         <Head>
           <title>DevConnect</title>
           <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
+            name='viewport'
+            content='initial-scale=1.0, width=device-width'
           />
         </Head>
 
-        <Box h="calc(100vh - 130px)">
+        <Box h='calc(100vh - 130px)'>
           <Flex
-            justify="center"
-            align="center"
-            h="100%"
-            direction="column"
-            color="#fff">
-            <Heading fontWeight="500" fontSize="3rem" mb="1.5rem">
+            justify='center'
+            align='center'
+            h='100%'
+            direction='column'
+            color='#fff'>
+            <Heading fontWeight='500' fontSize='3rem' mb='1.5rem'>
               No Posts Yet
             </Heading>
-            <Text fontWeight="400" fontSize="1.4rem">
+            <Text fontWeight='400' fontSize='1.4rem'>
               Be the first one to post
             </Text>
           </Flex>
-          <Flex justify="center" align="center">
-            <Box w="100%" position="fixed" bottom="0" textAlign="right">
+          <Flex justify='center' align='center'>
+            <Box w='100%' position='fixed' bottom='0' textAlign='right'>
               {renderPostButton()}
             </Box>
-            <Box w="45%" position="fixed" bottom="0">
+            <Box w='45%' position='fixed' bottom='0'>
               {renderPostInput()}
             </Box>
           </Flex>
@@ -199,16 +199,16 @@ function Index(props) {
     <>
       <Head>
         <title>DevConnect</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
 
-      <Box minH="calc(100vh - 130px)">
-        <Flex align="center" direction="column">
-          <Box w="45%">{renderPost()}</Box>
-          <Box w="100%" position="fixed" bottom="0" textAlign="right">
+      <Box minH='calc(100vh - 130px)'>
+        <Flex align='center' direction='column'>
+          <Box w='45%'>{renderPost()}</Box>
+          <Box w='100%' position='fixed' bottom='0' textAlign='right'>
             {renderPostButton()}
           </Box>
-          <Box w="45%" position="fixed" bottom="0">
+          <Box w='45%' position='fixed' bottom='0'>
             {renderPostInput()}
           </Box>
         </Flex>

@@ -2,13 +2,13 @@ import bcrypt from 'bcryptjs';
 import cookie from 'cookie';
 import connect from 'next-connect';
 
-import { auth, db } from '../../../utils/middleware';
+import { db } from '../../../utils/middleware';
 import User from '../../../utils/models/user';
 
 const handler = connect();
 handler.use(db);
 
-handler.use(auth).post(async (req, res) => {
+handler.post(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user)
     return res

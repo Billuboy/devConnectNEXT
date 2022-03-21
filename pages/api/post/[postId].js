@@ -8,7 +8,7 @@ import { auth, db } from '../../../utils/middleware';
 const handler = connect();
 handler.use(db);
 
-handler.use(auth).get(async (req, res) => {
+handler.get(async (req, res) => {
   const result = Validate(req.query.postId, res);
   if (result === undefined) return;
 

@@ -1,5 +1,12 @@
-import React, { useEffect, useState, createContext, useContext } from 'react';
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  useMemo,
+} from 'react';
 import axios from 'axios';
+import decode from 'jwt-decode';
 import { Box, Spinner, Flex } from '@chakra-ui/react';
 
 export const AuthContext = createContext({
@@ -9,15 +16,7 @@ export const AuthContext = createContext({
   changeState: null,
 });
 
-export function useAuth() {
-  const auth = useContext(AuthContext);
-
-  if (!auth) {
-    console.log('No Auth');
-  }
-
-  return auth;
-}
+export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState({});
@@ -33,18 +32,29 @@ export function AuthProvider({ children }) {
     setInit(false);
   }, []);
 
-  const changeState = (authStatus, initStatus, userStatus) => {
-    setAuth(authStatus);
-    setInit(initStatus);
-    setUserInfo(userStatus);
-  };
+  async function login(body) {
+    const { data } = await axios.post('/api/auth/login', body);
+    const info = decode(data.token);
+    setAuth(true);
+    setUserInfo(info);
+  }
 
-  const value = {
-    auth,
-    init,
-    userInfo,
-    changeState,
-  };
+  async function logout() {
+    await axios.post('/api/auth/logout');
+    setAuth(false);
+    setUserInfo({});
+  }
+
+  const value = useMemo(
+    () => ({
+      auth,
+      init,
+      userInfo,
+      logout,
+      login,
+    }),
+    [userInfo],
+  );
 
   if (init)
     return (

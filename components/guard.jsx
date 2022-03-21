@@ -6,7 +6,7 @@ export function AuthGuard({ children }) {
   const { auth } = useAuth();
 
   if (auth) return <>{children}</>;
-  router.replace('/auth');
+  router.replace('/login');
   return null;
 }
 
