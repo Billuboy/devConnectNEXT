@@ -1,13 +1,15 @@
 import connect from 'next-connect';
 
-import User from '../../../utils/models/user';
 import Profile from '../../../utils/models/profile';
 import lodash from 'lodash';
 import passport from '../../../utils/startup/passport';
 import Validate from '../../../utils/validations/profile/profile';
-import auth from '../../../utils/middleware/auth';
+import { auth, db } from '../../../utils/middleware';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .get(passport.authenticate('jwt', { session: false }), async (req, res) => {
     const response = await Profile.findOne({
@@ -23,7 +25,10 @@ export default connect()
     if (!response) return res.json({ data: [], name: req.user.name });
 
     return res.json(response);
-  })
+  });
+
+handler
+  .use(auth)
   .post(passport.authenticate('jwt', { session: false }), async (req, res) => {
     const result = Validate(req.body, res);
     if (result === undefined) return;
@@ -72,7 +77,7 @@ export default connect()
       const response = await Profile.findOneAndUpdate(
         { user: req.user._id },
         { $set: profileFields },
-        { new: true }
+        { new: true },
       );
 
       return res.json(response);
@@ -89,12 +94,17 @@ export default connect()
       const response = await profile.save();
       return res.json(response);
     }
-  })
+  });
+
+handler
+  .use(auth)
   .delete(
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       await Profile.findOneAndRemove({ user: req.user._id });
 
       return res.json({ deleted: true });
-    }
+    },
   );
+
+export default handler;

@@ -3,10 +3,13 @@ import connect from 'next-connect';
 import Post from '../../../../../utils/models/post';
 import ValidateObjId from '../../../../../utils/validations/objectId';
 import Validate from '../../../../../utils/validations/post/post';
-import auth from '../../../../../utils/middleware/auth';
+import { auth, db } from '../../../../../utils/middleware';
 import passport from '../../../../../utils/startup/passport';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .post(passport.authenticate('jwt', { session: false }), async (req, res) => {
     let result = ValidateObjId(req.query.postId, res);
@@ -28,3 +31,5 @@ export default connect()
     const response = await post.save();
     return res.json(response);
   });
+
+export default handler;

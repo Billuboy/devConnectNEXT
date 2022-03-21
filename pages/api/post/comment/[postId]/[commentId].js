@@ -2,10 +2,13 @@ import connect from 'next-connect';
 
 import Post from '../../../../../utils/models/post';
 import Validate from '../../../../../utils/validations/objectId';
-import auth from '../../../../../utils/middleware/auth';
+import { auth, db } from '../../../../../utils/middleware';
 import passport from '../../../../../utils/startup/passport';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .delete(
     passport.authenticate('jwt', { session: false }),
@@ -24,7 +27,7 @@ export default connect()
 
       if (
         post.comments.filter(
-          comment => String(comment._id) === req.query.commentId
+          comment => String(comment._id) === req.query.commentId,
         ).length === 0
       ) {
         return res.status(404).json({ error: 'Comment does not exist' });
@@ -39,5 +42,7 @@ export default connect()
 
       const response = await post.save();
       return res.json(response);
-    }
+    },
   );
+
+export default handler;

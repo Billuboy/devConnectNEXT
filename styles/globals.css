@@ -10,7 +10,6 @@ body {
   --second_color: #94b3c0;
   --third_color: #19456b;
   --fourth_color: #16c79a;
-  
 }
 
 * {
@@ -18,7 +17,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Raleway', sans-serif;
-  
 }
 
 a {
@@ -29,31 +27,35 @@ a {
   background: transparent !important;
 }
 
-input:focus{
+input:focus {
   border: 1px !important;
 }
 
-textarea:focus{
+textarea:focus {
   border: 1px !important;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 8px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   border-radius: 5px;
   background: rgb(145, 143, 143);
 }
 
-::-webkit-scrollbar-thumb:hover{
+::-webkit-scrollbar-thumb:hover {
   background: rgb(119, 117, 117);
 }
 
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-#app{
-  background: url('../public/bg.svg') no-repeat center center/cover;
+#app {
+  background: url('/static/bg.svg') no-repeat center center/cover;
+}
+
+.authLoader {
+  background: url('/static/bg.svg') no-repeat center center/cover;
 }

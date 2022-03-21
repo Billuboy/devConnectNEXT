@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import axios from 'axios';
-import decode from 'jwt-decode';
+import { Box, Spinner, Flex } from '@chakra-ui/react';
 
 export const AuthContext = createContext({
   auth: false,
@@ -30,7 +30,6 @@ export function AuthProvider({ children }) {
       setUserInfo(data.payload);
       setAuth(true);
     }
-
     setInit(false);
   }, []);
 
@@ -47,5 +46,24 @@ export function AuthProvider({ children }) {
     changeState,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  if (init)
+    return (
+      <Box h='100vh' className='authLoader'>
+        <Flex justify='center' align='center' h='100%'>
+          <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='#f8f1f1'
+            color='#19456b'
+            size='xl'
+          />
+        </Flex>
+      </Box>
+    );
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!init && children}
+    </AuthContext.Provider>
+  );
 }

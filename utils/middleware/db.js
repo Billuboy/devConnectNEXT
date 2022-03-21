@@ -1,8 +1,8 @@
 import connect from 'next-connect';
 
-import passport from '../startup/passport';
+import { dbConnect } from '../startup/db';
 
 const handler = connect();
-handler.use(passport.initialize());
+handler.use(dbConnect);
 
 export default handler;

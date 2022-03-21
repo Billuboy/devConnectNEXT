@@ -3,9 +3,12 @@ import connect from 'next-connect';
 import Validate from '../../../../utils/validations/objectId';
 import Profile from '../../../../utils/models/profile';
 import passport from '../../../../utils/startup/passport';
-import auth from '../../../../utils/middleware/auth';
+import { auth, db } from '../../../../utils/middleware';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .delete(
     passport.authenticate('jwt', { session: false }),
@@ -29,5 +32,7 @@ export default connect()
 
       const response = await profile.save();
       return res.json(response);
-    }
+    },
   );
+
+export default handler;

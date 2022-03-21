@@ -1,20 +1,22 @@
 import connect from 'next-connect';
 
-import auth from '../../../../utils/middleware/auth';
-import User from '../../../../utils/models/user';
+import { auth, db } from '../../../../utils/middleware';
 import Profile from '../../../../utils/models/profile';
 
-export default connect()
-  .use(auth)
-  .get(async (req, res) => {
-    const response = await Profile.findOne({
-      handle: req.query.handle,
-    }).populate('user', ['name']);
+const handler = connect();
+handler.use(db);
 
-    if (!response)
-      return res
-        .status(404)
-        .json({ noProfile: 'There is no profile for this user' });
+handler.use(auth).get(async (req, res) => {
+  const response = await Profile.findOne({
+    handle: req.query.handle,
+  }).populate('user', ['name']);
 
-    return res.json(response);
-  });
+  if (!response)
+    return res
+      .status(404)
+      .json({ noProfile: 'There is no profile for this user' });
+
+  return res.json(response);
+});
+
+export default handler;

@@ -4,7 +4,7 @@ const { MONGODB_URI, SECRET_KEY } = process.env;
 
 if (!MONGODB_URI && !SECRET_KEY) {
   throw new Error(
-    'Please define the MONGODB_URI and SECRET_KEY environment variable inside .env.local'
+    'Please define the MONGODB_URI and SECRET_KEY environment variable inside .env.local',
   );
 }
 
@@ -14,7 +14,7 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function dbConnect() {
+async function db() {
   if (cached.conn) {
     return cached.conn;
   }
@@ -36,4 +36,13 @@ async function dbConnect() {
   return cached.conn;
 }
 
-export default dbConnect;
+export async function dbConnect(req, res, next) {
+  try {
+    await db();
+    return next();
+  } catch (err) {
+    return res.status(500).send('Error connecting with database');
+  }
+}
+
+export default db;

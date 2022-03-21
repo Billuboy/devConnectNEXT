@@ -8,16 +8,15 @@ import { SWRConfig } from 'swr';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
-import AuthGuard from '../components/authGuard';
-import RedirGuard from '../components/redirGuard';
+import { AuthGuard, LoginGuard } from '../components/guard';
 import { AuthProvider } from '../components/authContext';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthProvider>
-      <ChakraProvider portalZIndex="10">
+    <ChakraProvider portalZIndex='10'>
+      <AuthProvider>
         <CSSReset />
-        <div id="app">
+        <div id='app'>
           <Header />
           <SWRConfig
             value={{
@@ -27,18 +26,20 @@ function MyApp({ Component, pageProps }) {
               <AuthGuard>
                 <Component {...pageProps} />
               </AuthGuard>
-            ) : Component.redir ? (
-              <RedirGuard>
+            ) : null}
+            {Component.redir ? (
+              <LoginGuard>
                 <Component {...pageProps} />
-              </RedirGuard>
-            ) : (
+              </LoginGuard>
+            ) : null}
+            {!Component.requireAuth && !Component.redir ? (
               <Component {...pageProps} />
-            )}
+            ) : null}
           </SWRConfig>
           <Footer />
         </div>
-      </ChakraProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ChakraProvider>
   );
 }
 

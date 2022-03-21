@@ -4,9 +4,12 @@ import _ from 'lodash';
 import Validate from '../../../../utils/validations/profile/education';
 import Profile from '../../../../utils/models/profile';
 import passport from '../../../../utils/startup/passport';
-import auth from '../../../../utils/middleware/auth';
+import { auth, db } from '../../../../utils/middleware';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .post(passport.authenticate('jwt', { session: false }), async (req, res) => {
     const result = Validate(req.body, res);
@@ -31,8 +34,10 @@ export default connect()
           education,
         },
       },
-      { new: true }
+      { new: true },
     );
 
     return res.json(response);
   });
+
+export default handler;

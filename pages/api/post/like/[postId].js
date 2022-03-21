@@ -1,11 +1,14 @@
 import connect from 'next-connect';
 
 import Post from '../../../../utils/models/post';
-import auth from '../../../../utils/middleware/auth';
+import { auth, db } from '../../../../utils/middleware';
 import passport from '../../../../utils/startup/passport';
 import Validate from '../../../../utils/validations/objectId';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .post(passport.authenticate('jwt', { session: false }), async (req, res) => {
     const result = Validate(req.query.postId, res);
@@ -38,8 +41,10 @@ export default connect()
           likeCount: 1,
         },
       },
-      { new: true }
+      { new: true },
     );
 
     return res.json(response);
   });
+
+export default handler;

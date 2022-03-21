@@ -3,9 +3,12 @@ import connect from 'next-connect';
 import Post from '../../../utils/models/post';
 import Validate from '../../../utils/validations/post/post';
 import passport from '../../../utils/startup/passport';
-import auth from '../../../utils/middleware/auth';
+import { auth, db } from '../../../utils/middleware';
 
-export default connect()
+const handler = connect();
+handler.use(db);
+
+handler
   .use(auth)
   .get(async (req, res) => {
     const response = await Post.find({})
@@ -29,3 +32,5 @@ export default connect()
     const response = await newPost.save();
     return res.json(response);
   });
+
+export default handler;

@@ -2,7 +2,9 @@ import connect from 'next-connect';
 import decode from 'jwt-decode';
 import cookie from 'cookie';
 
-export default connect().get((req, res) => {
+const handler = connect();
+
+handler.get((req, res) => {
   if (req.headers?.cookie) {
     const cookies = cookie.parse(req.headers.cookie);
 
@@ -16,3 +18,5 @@ export default connect().get((req, res) => {
 
   return res.json({ access: false });
 });
+
+export default handler;
