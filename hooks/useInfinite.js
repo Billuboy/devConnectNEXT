@@ -1,6 +1,6 @@
 import useSWRInfinite from 'swr/infinite';
 
-export default function useInfinitePosts(limit) {
+export default function useInfinite(limit) {
   return useSWRInfinite((index, prevData) => {
     if (prevData && !prevData.length) return null;
     if (!index) return `/api/posts?limit=${limit}`;

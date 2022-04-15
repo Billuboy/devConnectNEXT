@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 export default function useIntersection(ref) {
   const [isIntersecting, setIntersecting] = useState(false);
   useEffect(() => {
-    console.log('ref', ref.current);
     if (!ref.current) return null;
     const observer = new IntersectionObserver(
       (e) => {

@@ -1,11 +1,6 @@
 import mongoose from 'mongoose';
 
-const { MONGODB_URI, SECRET_KEY } = process.env;
-
-if (!MONGODB_URI && !SECRET_KEY)
-  throw new Error(
-    'Please define the MONGODB_URI and SECRET_KEY environment variable inside .env.local'
-  );
+const { MONGODB_URI } = process.env;
 
 let cached = global.mongoose;
 
