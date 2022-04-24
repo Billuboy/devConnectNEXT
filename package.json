@@ -10,6 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@headlessui/react": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.28.1",
     "formik": "^2.2.9",

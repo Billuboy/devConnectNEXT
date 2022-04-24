@@ -1,6 +1,6 @@
-import { jsonStringify } from './parseJSON';
+import { jsonStringify } from '@lib/parseJSON';
 
-export default async function httpRequest(method, url, signal, reqBody) {
+export default async function useFetch(method, url, signal, reqBody) {
   const options = reqBody
     ? {
         method,

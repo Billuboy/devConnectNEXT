@@ -1,13 +1,20 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
-import { useInfinitePosts, useIntersection, useBinSearch } from '@hooks/index';
+import {
+  useInfinitePosts,
+  useIntersection,
+  useBinSearch,
+  useFetch,
+} from '@hooks/index';
 import Post from '@components/post/postCard';
+import PostModal from '@components/modal/postModal';
+
+const PAGE_LIMIT = 10;
 
 export default function Index() {
-  const [value, setValue] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef();
   const isVisible = useIntersection(ref);
-  const PAGE_LIMIT = 10;
   const { data, error, size, setSize, isValidating, mutate } =
     useInfinitePosts(PAGE_LIMIT);
 
@@ -21,12 +28,12 @@ export default function Index() {
   const isRefreshing = isValidating && data && data.length === size;
 
   useEffect(() => {
-    if (isVisible && !isReachingEnd && !isRefreshing)
+    if (!isInitLoading && isVisible && !isReachingEnd && !isRefreshing)
       setSize((_size) => _size + 1);
   }, [isVisible, isRefreshing]);
 
   const onLike = useCallback(
-    (timestamp) => {
+    async (timestamp) => {
       const [fIndex, sIndex] = useBinSearch(data, timestamp);
       const post = data[fIndex][sIndex].likes;
       if (post.isLiked) {
@@ -41,22 +48,52 @@ export default function Index() {
     [data, mutate]
   );
 
-  const renderPosts = () => {
-    const posts = data?.flat(1);
-    return posts?.map((post) => (
-      <Post post={post} key={post._id} onLike={onLike} />
-    ));
+  const createBlog = async (body, signal) => {
+    console.log(body);
+    // const mutatedBody = {
+    //   title: body.title,
+
+    // }
+
+    // await useFetch('POST', '/api/posts/', controller.current.signal, data);
   };
 
-  if (isEmpty) return <div>No posts yet. Create one</div>;
+  const renderPosts = () => {
+    if (isEmpty) return <div>No posts yet. Create one</div>;
+
+    const posts = data?.flat(1);
+    return posts?.map((post) => {
+      const { isLiked } = post;
+      return (
+        <Post key={post._id} post={post} isLiked={isLiked} onLike={onLike} />
+      );
+    });
+  };
+
+  if (isInitLoading) return <div>Loading...</div>;
+
   return (
     <div>
       <div>Index</div>
-      <button type="button" onClick={() => setValue((val) => val + 1)}>
-        {value}
-      </button>
+      <div className="w-[160px] h-[40px] bg-purple-500 rounded-[5px] grid place-items-center mt-[1.5rem]">
+        <button
+          type="button"
+          className="font-semibold text-[18px] text-white-basic"
+          onClick={() => setIsOpen(true)}
+        >
+          Create a Blog
+        </button>
+      </div>
+      <PostModal
+        buttonText="Create Blog"
+        submitCallback={createBlog}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
       {renderPosts()}
-      <div ref={ref}>{isLoadingMore ? 'loading...' : null}</div>
+      {!isEmpty && isRefreshing ? (
+        <div ref={ref}>{isLoadingMore ? 'loading...' : 'something value'}</div>
+      ) : null}
     </div>
   );
 }

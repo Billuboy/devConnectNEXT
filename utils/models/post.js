@@ -13,10 +13,11 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  date: {
+  timestamp: {
     type: Date,
     default: Date.now,
   },
+  images: [{ type: mongoose.Schema.Types.String }],
 });
 
 const Post = mongoose.models.posts || mongoose.model('posts', Schema);

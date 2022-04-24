@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
-import httpRequest from '@lib/httpRequest';
+import { useFetch } from '@hooks/index';
 
 export default function PostCreate() {
   const controller = useRef(null);
@@ -19,7 +19,7 @@ export default function PostCreate() {
   const onSubmit = async (data, { resetForm }) => {
     try {
       controller.current = new AbortController();
-      await httpRequest('POST', '/api/posts/', controller.current.signal, data);
+      await useFetch('POST', '/api/posts/', controller.current.signal, data);
       timeout = setTimeout(() => resetForm(), 500);
     } catch (err) {
       console.log('ERROR: http request has been cancelled by user');

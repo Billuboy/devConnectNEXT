@@ -2,19 +2,20 @@ import React, { memo } from 'react';
 
 import { parseDate } from '@lib/dateFns';
 
-function PostCard({ post, onLike }) {
+function PostCard({ post, isLiked, onLike }) {
   const { date, time } = parseDate(post.date);
   return (
     <div className="h-200px border border-solid border-white">
       <div>{post.title}</div>
-      <div>{post.desc}</div>
+      <div>{post.images.length ? post.images[0] : 0}</div>
+      <div>{post.images.length ? post.images[1] : 1}</div>
       <div>
         <p>{date}</p>
         <p>{time}</p>
       </div>
       <div>Comments: {post.comments.count}</div>
       <div>Likes: {post.likes.count}</div>
-      <div>isLiked: {post.likes.isLiked ? 'yes' : 'no'}</div>
+      <div>isLiked: {isLiked ? 'yes' : 'no'}</div>
       <button onClick={() => onLike(post.date)} type="button">
         Like
       </button>
@@ -22,9 +23,7 @@ function PostCard({ post, onLike }) {
   );
 }
 
-const arePropsEqual = (prevProps, currProps) => {
-  console.log(prevProps.likes === currProps.likes);
-  return prevProps.likes === currProps.likes;
-};
-
-export default memo(PostCard, arePropsEqual);
+export default memo(
+  PostCard,
+  (prevProps, currProps) => prevProps.isLiked === currProps.isLiked
+);

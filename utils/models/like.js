@@ -9,11 +9,7 @@ const schema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  likes: [
-    {
-      type: mongoose.Types.ObjectId,
-    },
-  ],
+  likes: [{ type: mongoose.Types.ObjectId }],
 });
 
 const Like = mongoose.models.likes || mongoose.model('likes', schema);

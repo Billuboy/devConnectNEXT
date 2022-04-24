@@ -1,7 +1,7 @@
 import connect from 'next-connect';
 import { Types } from 'mongoose';
 
-import { Post, Like, Comment } from '@utils/models';
+import { Post, Like } from '@utils/models';
 import { validatePost } from '@utils/validations';
 import { all, auth, postAuth } from '@utils/middleware';
 
@@ -13,10 +13,10 @@ handler.use(postAuth).get(async (req, res) => {
   const fromDate = req.query.from ? new Date(req.query.from) : new Date();
   const limit = parseInt(req.query.limit, 10);
   const posts = await Post.aggregate([
-    { $match: { date: { $lte: fromDate } } },
-    { $sort: { date: -1 } },
+    { $match: { timestamp: { $lte: fromDate } } },
+    { $sort: { timestamp: -1 } },
     { $limit: limit },
-    { $project: { title: 1, desc: 1, author: 1, date: 1 } },
+    { $project: { title: 1, images: 1, author: 1, timestamp: 1 } },
     {
       $lookup: {
         from: 'users',
@@ -32,7 +32,20 @@ handler.use(postAuth).get(async (req, res) => {
         localField: '_id',
         foreignField: 'post',
         as: 'comments',
-        pipeline: [{ $project: { _id: 0, count: 1 } }],
+        pipeline: [
+          {
+            $facet: {
+              commentCount: [{ $count: 'count' }],
+            },
+          },
+          {
+            $project: {
+              count: {
+                $ifNull: [{ $arrayElemAt: ['$commentCount.count', 0] }, 0],
+              },
+            },
+          },
+        ],
       },
     },
     {
@@ -85,8 +98,6 @@ handler.use(auth).post(async (req, res) => {
   const insertedPost = await newPost.save();
   const newLike = new Like({ post: insertedPost._id });
   await newLike.save();
-  const newComment = new Comment({ post: insertedPost._id });
-  await newComment.save();
   return res.status(201).send('created');
 });
 

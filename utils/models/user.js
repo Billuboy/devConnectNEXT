@@ -17,7 +17,7 @@ const Schema = new mongoose.Schema({
   email: {
     type: String,
   },
-  date: {
+  timestamp: {
     type: Date,
     default: Date.now,
   },

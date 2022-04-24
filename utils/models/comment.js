@@ -5,26 +5,18 @@ const schema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'posts',
   },
-  count: {
-    type: Number,
-    default: 0,
+  author: {
+    type: mongoose.Types.ObjectId,
+    ref: 'users',
   },
-  comments: [
-    {
-      user: {
-        type: mongoose.Types.ObjectId,
-        ref: 'users',
-      },
-      text: {
-        type: String,
-        required: true,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+  comment: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Comment = mongoose.models.comments || mongoose.model('comments', schema);
